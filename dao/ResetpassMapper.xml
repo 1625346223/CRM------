@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hwua.dao.ResetpassMapper" >
+  <resultMap id="BaseResultMap" type="com.hwua.entity.Resetpass" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="PHONENO" property="phoneNo" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, USERNAME, PHONENO
+  </sql>
+  
+  <select id="queryAllReserpass" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from RESETPASS
+  </select>
+ 
+  <delete id="deleteReset" parameterType="com.hwua.entity.Resetpass" >
+    delete from RESETPASS
+    where ID = #{id}
+  </delete>
+  
+  
+  <insert id="add" parameterType="com.hwua.entity.Resetpass" >
+  		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			SELECT RESETPASS_SEQ.nextval as id FROM dual
+		</selectKey>
+    insert into RESETPASS (ID, USERNAME, PHONENO)
+    values (#{id}, #{username,jdbcType=VARCHAR}, #{phoneNo,jdbcType=VARCHAR})
+  </insert>
+  
+  <delete id="remove" parameterType="com.hwua.entity.Resetpass">
+		delete from RESETPASS
+		where ID = #{id}
+  </delete>
+  
+  
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hwua.dao.CustomMapper" >
+  <resultMap id="BaseResultMap" type="com.hwua.entity.Custom" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="COMPANY" property="education" jdbcType="VARCHAR" />
+    <result column="PHONENO" property="phoneNo" jdbcType="VARCHAR" />
+    <result column="QQ" property="qq" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="CUSTOMSTATU" property="customStatu" jdbcType="CHAR" />
+    <result column="CREATEDATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="INVITENAME" property="invitename" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID,NAME,EDUCATION,PHONENO,QQ,EMAIL,CUSTOMSTATU,CREATEDATE,INVITENAME
+  </sql>
+  <!--查询所有  -->
+  <select id="queryAllCustom" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from Custom
+    <where>
+			<if test="name != null"> name like #{name,jdbcType=CHAR}
+			</if>
+			<if test="phoneNo != null"> phoneNo like #{phoneNo,jdbcType=CHAR}
+			</if>
+			<if test="customStatu != null"> customStatu=#{customStatu,jdbcType=CHAR}
+			</if>
+			<if test="createDate != null"> createDate=#{createDate}
+			</if>
+			<if test="invitename != null"> invitename like #{invitename,jdbcType=CHAR}
+			</if>
+		</where>
+  </select>
+    <!--查询重复  -->
+  	<select id="checkCustom" parameterType="com.hwua.entity.Custom"
+		resultMap="BaseResultMap">
+		SELECT
+		NAME,EDUCATION,PHONENO,QQ,EMAIL,CUSTOMSTATU,CREATEDATE,INVITENAME
+		from
+		Custom
+		WHERE NAME= #{name} AND QQ = #{qq}
+	</select>
+	
+
+	<!-- 添加用户 -->
+	<insert id="saveCustom" parameterType="com.hwua.entity.Custom">
+		<selectKey keyProperty="id" keyColumn="id" resultType="long"
+			order="BEFORE">
+			select CUSTOM_SEQ.nextval as id from dual
+		</selectKey>
+		insert into Custom
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			ID,
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="education != null">
+				EDUCATION,
+			</if>
+			<if test="phoneNo != null">
+				PHONENO,
+			</if>
+			<if test="qq != null">
+				QQ,
+			</if>
+			<if test="email != null">
+				EMAIL,
+			</if>
+			<if test="customStatu != null">
+				CUSTOMSTATU,
+			</if>
+			<if test="createDate != null">
+				CREATEDATE,
+			</if>
+			<if test="invitename != null">
+				INVITENAME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id},
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="education != null">
+				#{education,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneNo != null">
+				#{phoneNo,jdbcType=VARCHAR},
+			</if>
+			<if test="qq != null">
+				#{qq,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="customStatu != null">
+				#{customStatu,jdbcType=CHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="invitename != null">
+				#{invitename,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+  <!--更新顾客  -->
+  <update id="updateCustom" parameterType="com.hwua.entity.Resetpass">
+    update custom
+    set NAME =#{name},EDUCATION= #{education},
+    PHONENO =#{phoneNo},
+    QQ=#{qq},EMAIL= #{email},
+    CUSTOMSTATU= #{customStatu},
+    INVITENAME = #{invitename}
+    WHERE ID=#{id}
+  </update>
+  <!-- 改变 custom-->
+	<update id="setStatu" parameterType="java.lang.Long">
+		update custom
+		set CUSTOMSTATU = '3'
+		where ID = #{id}        
+	</update>
+	<!--查询需要分配的顾客  -->
+	<select id="queryCustomByStatu"
+		resultMap="BaseResultMap">
+		select
+		ID,NAME,EDUCATION,PHONENO,QQ,EMAIL,CUSTOMSTATU,CREATEDATE,INVITENAME
+		from
+		Custom
+		WHERE CUSTOMSTATU = 0
+	</select>
+	<!-- 改变 custom 未销售跟进中 -->
+	<update id="changeStuta" parameterType="java.lang.Long">
+		update custom
+		set CUSTOMSTATU = '2'
+		where ID = #{id}        
+	</update>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hwua.dao.Custominfo_customMapper" >
+  <resultMap id="BaseResultMap" type="com.hwua.entity.Custominfo_02" >
+     <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PHONENO" property="phoneNo" jdbcType="VARCHAR" />
+  </resultMap>
+ <!--queryToday-->
+	<select id="queryToday" parameterType="com.hwua.entity.Custominfo"
+		resultMap="BaseResultMap">
+		select ci.ID,c.NAME,ci.CUSTOMID,ci.FOLLOWMANID,ci.STATU,
+		ci.STARTDATE,ci.PLANDATE,ci.LASTFOLLOWDATE,ci.MARK,c.PHONENO
+		from CUSTOM c,CUSTOMINFO ci
+		where to_char(ci.STARTDATE,'dd')=to_char(sysdate,'dd')
+		and c.ID = ci.CUSTOMID 
+		and ci.FOLLOWMANID = #{followManId}
+	</select>
+	<!-- queryMonth -->
+	<select id="queryMonth" parameterType="com.hwua.entity.Custominfo"
+		resultMap="BaseResultMap">
+		select ci.ID,c.NAME,ci.CUSTOMID,ci.FOLLOWMANID,ci.STATU,
+		ci.STARTDATE,ci.PLANDATE,ci.LASTFOLLOWDATE,ci.MARK,c.PHONENO
+		from CUSTOM c,CUSTOMINFO ci
+		where to_char(ci.STARTDATE,'mm')=to_char(sysdate,'mm')
+		and c.ID = ci.CUSTOMID 
+		and ci.FOLLOWMANID = #{followManId}
+	</select>
+	<!-- queryNotToday -->
+	<select id="queryNotToday" parameterType="com.hwua.entity.Custominfo"
+		resultMap="BaseResultMap">
+		select ci.ID,c.NAME,ci.CUSTOMID,ci.FOLLOWMANID,ci.STATU,
+		ci.STARTDATE,ci.PLANDATE,ci.LASTFOLLOWDATE,ci.MARK,c.PHONENO
+		from CUSTOM c,CUSTOMINFO ci
+		where to_char(ci.STARTDATE,'mm')!=to_char(sysdate,'mm')
+		and c.ID = ci.CUSTOMID 
+		and ci.FOLLOWMANID = #{followManId}
+		and ci.STATU = 0
+	</select>
+	<!-- queryTodayByDate -->
+	<select id="queryTodayByDate" parameterType="com.hwua.entity.Custominfo"
+		resultMap="BaseResultMap">
+		select ci.ID,c.NAME,ci.CUSTOMID,ci.FOLLOWMANID,ci.STATU,
+		ci.STARTDATE,ci.PLANDATE,ci.LASTFOLLOWDATE,ci.MARK,c.PHONENO
+		from CUSTOM c,CUSTOMINFO ci
+		where PLANDATE = to_char(sysdate)
+		and c.ID = ci.CUSTOMID 
+		and ci.FOLLOWMANID = #{followManId}
+	</select>
+</mapper>

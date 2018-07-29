@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwua.dao.RightsMapper">
+  <resultMap id="BaseResultMap" type="com.hwua.entity.Rights">
+    <id column="RID" jdbcType="DECIMAL" property="rid" />
+    <result column="RIGHTNAME" jdbcType="VARCHAR" property="rightName" />
+    <result column="RIGHTTYPE" jdbcType="CHAR" property="rightType" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+    <result column="PID" jdbcType="DECIMAL" property="pid" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    RID, RIGHTNAME, RIGHTTYPE, URL, PID
+  </sql>
+  
+  <!--显示用户权限  -->
+  <select id="selectByExample" parameterType="com.hwua.entity.Employee" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from JOBRIGHT,RIGHTS  
+    where RIGHTID=rid and JOBINFOID=#{jobInfoId,jdbcType=DECIMAL}
+    
+    
+    <!-- where RID = #{rid,jdbcType=DECIMAL} -->
+  </select>
+
+  <!-- <insert id="insert" parameterType="com.hwua.entity.Rights">
+    insert into RIGHTS (RID, RIGHTNAME, RIGHTTYPE, 
+      URL, PID)
+    values (#{rid,jdbcType=DECIMAL}, #{rightname,jdbcType=VARCHAR}, #{righttype,jdbcType=CHAR}, 
+      #{url,jdbcType=VARCHAR}, #{pid,jdbcType=DECIMAL})
+  </insert> -->
+
+</mapper>

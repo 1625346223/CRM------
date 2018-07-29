@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hwua.dao.EmployeeMapper" >
+  <resultMap id="BaseResultMap" type="com.hwua.entity.Employee" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="PASS" property="pass" jdbcType="VARCHAR" />
+    <result column="NICKNAME" property="nickname" jdbcType="VARCHAR" />
+    <result column="REALNAME" property="realName" jdbcType="VARCHAR" />
+    <result column="JOBINFOID" property="jobInfoId" jdbcType="DECIMAL" />
+    <result column="DEPARTMENTID" property="departmentId" jdbcType="DECIMAL" />
+    <result column="PHONENO" property="phoneNo" jdbcType="VARCHAR" />
+    <result column="OFFICETEL" property="officeTel" jdbcType="VARCHAR" />
+    <result column="WORKSTATU" property="workstatu" jdbcType="CHAR" />
+  </resultMap>
+ 
+   <sql id="Base_Column_List" >
+    ID, USERNAME, PASS, NICKNAME, REALNAME, JOBINFOID, DEPARTMENTID, PHONENO, OFFICETEL, 
+    WORKSTATU
+  </sql>
+  <!--登录  -->
+  <select id="login" resultMap="BaseResultMap" parameterType="com.hwua.entity.Employee" >
+    select 
+    <include refid="Base_Column_List" />
+    from EMPLOYEE
+    where username=#{username,jdbcType=DECIMAL} and #{pass,jdbcType=DECIMAL}=pass
+    <!-- where ID = #{id,jdbcType=DECIMAL} -->
+  <!--添加员工  -->
+  </select>
+  <insert id="insert" parameterType="com.hwua.entity.Employee" >
+  		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			SELECT EMPLOYEE_SEQ.nextval as id FROM dual
+		</selectKey>
+    INSERT INTO EMPLOYEE (ID, USERNAME, PASS, 
+      NICKNAME, REALNAME, JOBINFOID, 
+      DEPARTMENTID, PHONENO, OFFICETEL, 
+      WORKSTATU)
+    VALUES (#{id}, #{username,jdbcType=VARCHAR}, #{pass,jdbcType=VARCHAR}, 
+      #{nickname,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{jobInfoId,jdbcType=DECIMAL}, 
+      #{departmentId,jdbcType=DECIMAL}, #{phoneNo,jdbcType=VARCHAR}, #{officeTel,jdbcType=VARCHAR}, 
+      '1')
+  </insert>
+  <!--查询重复  -->
+  <select id="checkUserName" resultMap="BaseResultMap" parameterType="com.hwua.entity.Employee" >
+    select 
+    <include refid="Base_Column_List" />
+    from EMPLOYEE
+    where USERNAME = #{username}
+ 	</select>
+ <!--超级管理员注销  -->
+  <update id="logoutUser" parameterType="java.lang.String" >
+    UPDATE EMPLOYEE
+    SET WORKSTATU = '0' 
+    WHERE USERNAME = #{username}
+ </update>
+ 
+ <!--员工修改内部信息  -->
+ <update id="updateEmployee" parameterType="com.hwua.entity.Employee" >
+   UPDATE EMPLOYEE
+   SET  NICKNAME=#{nickname},
+   PHONENO=#{phoneNo},
+   OFFICETEL=#{officeTel}
+   where id=#{id}
+  </update>
+ <!--修改密码  -->
+ <update id="changePass" parameterType="com.hwua.entity.Employee">
+	update EMPLOYEE
+	set PASS = #{pass}
+	where ID = #{id}
+	</update>
+ <!--根据ID查  -->
+ <select id="queryById" parameterType="java.lang.Long"
+	resultMap="BaseResultMap">
+	select
+	<include refid="Base_Column_List" />
+	from EMPLOYEE
+	WHERE id=  #{id}
+	</select>
+<!--重置密码时判断用户是否存在  -->
+<select id="queryByUsername" resultMap="BaseResultMap" parameterType="com.hwua.entity.Employee" >
+    select 
+    <include refid="Base_Column_List" />
+    from EMPLOYEE
+    where USERNAME = #{username} AND PHONENO = #{phoneNo}
+ 	</select>
+
+ 
+</mapper>

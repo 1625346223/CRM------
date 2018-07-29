@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hwua.dao.Employee02Mapper">
+	<resultMap id="BaseResultMap" type="com.hwua.entity.Employee02">
+		<result column="JOB" property="job" jdbcType="VARCHAR" />
+		<result column="DNAME" property="dname" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 所有员工信息-->
+	<select id="queryEmployees"
+		resultMap="BaseResultMap">
+		select
+		e.id,e.realname,e.nickname,d.dname,j.job,e.officetel,e.phoneno
+		from EMPLOYEE e, DEPARTMENT d,JOBINFO j
+		WHERE e.DEPARTMENTID = d.id and  e.JOBINFOID = j.id
+	</select>
+</mapper>
